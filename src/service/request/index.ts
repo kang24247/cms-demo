@@ -1,29 +1,12 @@
 import axios from 'axios'
-import {
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
-
-interface axiosInterceptors {
-  requsetInterceptor?: (
-    config: InternalAxiosRequestConfig
-  ) => InternalAxiosRequestConfig
-  requsetInterceptorCatch?: (error: any) => any
-  responseInterceptor?: (config: AxiosResponse) => AxiosResponse
-  responseInterceptorCatch?: (error: any) => any
-}
-
-interface requestInterceptors extends AxiosRequestConfig {
-  interceptors: axiosInterceptors
-}
+import { AxiosInstance } from 'axios'
+import { AxiosInterceptors, MyRequestConfig } from './type'
 
 class axios_common_instance {
   instance: AxiosInstance
-  interceptors?: axiosInterceptors
+  interceptors?: AxiosInterceptors
 
-  constructor(config: requestInterceptors) {
+  constructor(config: MyRequestConfig) {
     this.instance = axios.create(config)
     this.interceptors = config.interceptors
     this.instance.interceptors.request.use(
@@ -34,11 +17,30 @@ class axios_common_instance {
       this.interceptors?.responseInterceptor,
       this.interceptors?.responseInterceptorCatch
     )
+    this.instance.interceptors.request.use(
+      (config) => {
+        return config
+      },
+      (err) => {
+        return err
+      }
+    )
+    this.instance.interceptors.response.use(
+      (res) => {
+        return res
+      },
+      (err) => {
+        return err
+      }
+    )
   }
 
-  request(config: AxiosRequestConfig): void {
+  request(config: MyRequestConfig): void {
+    if (config.interceptors?.requsetInterceptor) {
+      config = config.interceptors.requsetInterceptor(config)
+    }
     this.instance.request(config).then((res) => {
-      // console.log(res)
+      console.log(res)
     })
   }
 }
