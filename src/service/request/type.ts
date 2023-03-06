@@ -1,12 +1,18 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import {
+  InternalAxiosRequestConfig,
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios'
 
-export interface AxiosInterceptors {
-  requsetInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
+export interface MyRequestConfig extends AxiosRequestConfig {
+  interceptors?: MyAxiosInterceptors
+}
+
+export interface MyAxiosInterceptors {
+  requsetInterceptor?: (
+    config: InternalAxiosRequestConfig
+  ) => InternalAxiosRequestConfig
   requsetInterceptorCatch?: (error: any) => any
   responseInterceptor?: (config: AxiosResponse) => AxiosResponse
   responseInterceptorCatch?: (error: any) => any
-}
-
-export interface MyRequestConfig extends AxiosRequestConfig {
-  interceptors: AxiosInterceptors
 }

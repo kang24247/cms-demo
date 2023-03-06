@@ -6,15 +6,15 @@ import { registerApp } from './global'
 import request from './service'
 const app = createApp(App)
 
-// request.request({
-//   url: '/home',
-//   method: 'get',
-//   interceptors: {
-//     requsetInterceptor: (config) => {
-//       console.log(config)
-//     }
-//   }
-// })
+request.request({
+  url: '/home',
+  method: 'get',
+  interceptors: {
+    requsetInterceptor: (config) => {
+      return config
+    }
+  }
+})
 // request.request({
 //   url: '/home',
 //   method: 'get',
